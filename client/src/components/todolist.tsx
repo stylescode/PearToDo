@@ -18,7 +18,7 @@ const TodoList = () => {
   const [input, setInput] = useState<string>('');
 
   const refreshTodos = () => {
-    axios.get('http://localhost:3001/api/todos')
+    axios.get('http://localhost:3000/api/todos')
       .then((response) => {
         const sortedTodos = response.data;
         sortedTodos.sort((a, b) => {
@@ -39,6 +39,9 @@ const TodoList = () => {
   }, [todos]);
 
   const handleAdd = async () => {
+    if (!input) {
+      return;
+    }
     const id = Date.now();
     const newTodo: Todo = {
       id: id,
@@ -46,15 +49,15 @@ const TodoList = () => {
       completed: false,
       priority: false,
     };
-    await axios.post('http://localhost:3001/api/todos', newTodo);
+    await axios.post('http://localhost:3000/api/todos', newTodo);
     setInput('');
     refreshTodos();
   };
 
   const handleDelete = async (id: number) => {
-    await axios.delete(`http://localhost:3001/api/todos/${id}`)
+    await axios.delete(`http://localhost:3000/api/todos/${id}`)
       .then(() => {
-        return axios.get('http://localhost:3001/api/todos')
+        return axios.get('http://localhost:3000/api/todos')
       })
       .then((response) => {
         setTodos(response.data);
@@ -63,7 +66,7 @@ const TodoList = () => {
 
   const toggleComplete = (todo: Todo) => {
     const updatedItem = { ...todo, completed: !todo.completed };
-    axios.put(`http://localhost:3001/api/todos/${todo.id}`, updatedItem)
+    axios.put(`http://localhost:3000/api/todos/${todo.id}`, updatedItem)
       .then(() => {
         refreshTodos();
       });
@@ -71,9 +74,9 @@ const TodoList = () => {
 
   const toggleChildComplete = (child: Todo, parent: Todo) => {
     const updatedChild = { ...child, completed: !child.completed };
-    axios.put(`http://localhost:3001/api/todos/${child.id}`, updatedChild)
+    axios.put(`http://localhost:3000/api/todos/${child.id}`, updatedChild)
       .then(() => {
-        return axios.get('http://localhost:3001/api/todos');
+        return axios.get('http://localhost:3000/api/todos');
       }).then((response) => {
         const updatedTodos = response.data;
         const updatedParent = updatedTodos.find((todo) => todo.id === parent.id);
@@ -88,7 +91,7 @@ const TodoList = () => {
 
   const togglePriority = (todo: Todo) => {
     const updatedItem = { ...todo, priority: !todo.priority };
-    axios.put(`http://localhost:3001/api/todos/${todo.id}`, updatedItem)
+    axios.put(`http://localhost:3000/api/todos/${todo.id}`, updatedItem)
       .then(() => {
         refreshTodos();
       });
@@ -104,7 +107,7 @@ const TodoList = () => {
     };
     todo.children = todo.children || [];
     const updatedItem = { ...todo, children: [...todo.children, newTodo] };
-    axios.put(`http://localhost:3001/api/todos/${todo.id}`, updatedItem)
+    axios.put(`http://localhost:3000/api/todos/${todo.id}`, updatedItem)
       .then(() => {
         refreshTodos();
       });
