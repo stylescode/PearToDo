@@ -109,6 +109,9 @@ const TodoList = () => {
 
   const addSubTodo = (todo: Todo) => {
     const input = prompt('Enter sub todo');
+    if (!input) {
+      return;
+    }
     const newTodo = {
       id: Date.now(),
       title: input,
