@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios, { all } from 'axios';
+import axios from 'axios';
 import { FaCheckCircle, FaRegCircle, FaRegPlusSquare } from "react-icons/fa";
 import { TiPin, TiPinOutline } from "react-icons/ti";
 import { IoTrashBin } from "react-icons/io5";
@@ -21,7 +21,6 @@ const TodoList = () => {
     axios.get('http://localhost:3001/api/todos')
       .then((response) => {
         const sortedTodos = response.data;
-        // sort by priority
         sortedTodos.sort((a, b) => {
           if (a.priority && !b.priority) {
             return -1;
@@ -53,10 +52,8 @@ const TodoList = () => {
   };
 
   const handleDelete = async (id: number) => {
-    console.log('delete item');
     await axios.delete(`http://localhost:3001/api/todos/${id}`)
       .then(() => {
-        console.log('deleted');
         return axios.get('http://localhost:3001/api/todos')
       })
       .then((response) => {
@@ -71,6 +68,23 @@ const TodoList = () => {
         refreshTodos();
       });
   };
+
+  const toggleChildComplete = (child: Todo, parent: Todo) => {
+    const updatedChild = { ...child, completed: !child.completed };
+    axios.put(`http://localhost:3001/api/todos/${child.id}`, updatedChild)
+      .then(() => {
+        return axios.get('http://localhost:3001/api/todos');
+      }).then((response) => {
+        const updatedTodos = response.data;
+        const updatedParent = updatedTodos.find((todo) => todo.id === parent.id);
+        const allChildrenCompleted = updatedParent.children.every((child) => child.completed);
+        if (allChildrenCompleted && !updatedParent.completed) {
+          return toggleComplete(updatedParent);
+        }
+      }).then(() => {
+        refreshTodos();
+      })
+  }
 
   const togglePriority = (todo: Todo) => {
     const updatedItem = { ...todo, priority: !todo.priority };
@@ -129,7 +143,7 @@ const TodoList = () => {
             {todo.children && todo.children.map((child) => (
               <div className="sub-item-container" key={child.id}>
                 <div className="left">
-                  <button onClick={() => toggleComplete(child)}>
+                  <button onClick={() => toggleChildComplete(child, todo)}>
                     {child.completed ? <FaCheckCircle /> : <FaRegCircle />}
                   </button>
                   <div>
