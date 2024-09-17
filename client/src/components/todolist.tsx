@@ -31,6 +31,8 @@ const TodoList = () => {
           return 0;
         });
         setTodos(sortedTodos);
+      }).catch((error) => {
+        console.error('Error fetching todos', error);
       });
   }
 
@@ -61,6 +63,8 @@ const TodoList = () => {
       })
       .then((response) => {
         setTodos(response.data);
+      }).catch((error) => {
+        console.error('Error deleting todo', error);
       });
   }
 
@@ -69,6 +73,8 @@ const TodoList = () => {
     axios.put(`/api/todos/${todo.id}`, updatedItem)
       .then(() => {
         refreshTodos();
+      }).catch((error) => {
+        console.error('Error updating todo', error);
       });
   };
 
@@ -86,7 +92,9 @@ const TodoList = () => {
         }
       }).then(() => {
         refreshTodos();
-      })
+      }).catch((error) => {
+        console.error('Error updating child todo', error);
+      });
   }
 
   const togglePriority = (todo: Todo) => {
@@ -94,6 +102,8 @@ const TodoList = () => {
     axios.put(`/api/todos/${todo.id}`, updatedItem)
       .then(() => {
         refreshTodos();
+      }).catch((error) => {
+        console.error('Error updating priority', error);
       });
   }
 
@@ -110,6 +120,8 @@ const TodoList = () => {
     axios.put(`/api/todos/${todo.id}`, updatedItem)
       .then(() => {
         refreshTodos();
+      }).catch((error) => {
+        console.error('Error adding sub todo', error);
       });
   }
 
