@@ -21,7 +21,7 @@ const TodoList = () => {
     axios.get('/api/todos')
       .then((response) => {
         const sortedTodos = response.data;
-        sortedTodos.sort((a, b) => {
+        sortedTodos.sort((a: Todo, b: Todo) => {
           if (a.priority && !b.priority) {
             return -1;
           }
@@ -85,8 +85,8 @@ const TodoList = () => {
         return axios.get('/api/todos');
       }).then((response) => {
         const updatedTodos = response.data;
-        const updatedParent = updatedTodos.find((todo) => todo.id === parent.id);
-        const allChildrenCompleted = updatedParent.children.every((child) => child.completed);
+        const updatedParent = updatedTodos.find((todo: Todo) => todo.id === parent.id);
+        const allChildrenCompleted = updatedParent.children.every((child: Todo) => child.completed);
         if (allChildrenCompleted && !updatedParent.completed) {
           return toggleComplete(updatedParent);
         }
