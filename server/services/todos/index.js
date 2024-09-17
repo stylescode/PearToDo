@@ -30,6 +30,16 @@ const updateTodo = async (id, updatedInfo) => {
   try {
     const todos = getTodos();
     const updatedTodos = await todos.map(todo => {
+      if (todo.children) {
+        const updatedChildren = todo.children.map(child => {
+          const childIdToString = child.id.toString();
+          if (childIdToString === id) {
+            return updatedInfo;
+          }
+          return child;
+        });
+        todo.children = updatedChildren;
+      }
       const idToString = todo.id.toString();
       if (idToString === id) {
         return updatedInfo;
@@ -46,8 +56,18 @@ const updateTodo = async (id, updatedInfo) => {
 
 const deleteTodo = (id) => {
   try {
+    console.log(id);
     const todos = getTodos();
     const updatedTodos = todos.filter(todo => {
+      if (todo.children) {
+        const updatedChildren = todo.children.filter(child => {
+          const childIdToString = child.id.toString();
+          if (childIdToString !== id) {
+            return child;
+          }
+        });
+        todo.children = updatedChildren;
+      }
       const idToString = todo.id.toString();
       if (idToString !== id) {
         return todo;
