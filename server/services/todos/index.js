@@ -56,7 +56,6 @@ const updateTodo = async (id, updatedInfo) => {
 
 const deleteTodo = (id) => {
   try {
-    console.log(id);
     const todos = getTodos();
     const updatedTodos = todos.filter(todo => {
       if (todo.children) {
