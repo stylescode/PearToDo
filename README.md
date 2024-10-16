@@ -1,7 +1,3 @@
-# Web Coding Challenge
-
-The basic steps to install and run both the server and client parts of the web coding challenge.
-
 ## Getting Started
 
 Follow these steps to set up and run the project.
